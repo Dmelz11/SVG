@@ -1,23 +1,12 @@
-const inquirer = require('inquirer');
-const fs = requirer('fs');
-const {Circle, Triangle, Square} = require('./lib/shapes');
+const fs = require("fs");
 
-class Svg{
-    constructor(){
-    this.textElement = ""
-    this.shapeElement = ""
-}
-render() {
-    return `<svg version = "1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200"`
-}
-setTextElement (text, color) {
-    this.textElement =`<text x="150" y="125" font-size="60" text-anchor="middle" fill="100%"`
-}
-setShapeElement (shape){
-    this.shapeElement = shape.render()
-}
-};
-const questions = [
+const inquirer = require("inquirer");
+
+const {Circle, Triangle, Square} = require("./lib/shapes");
+
+
+    inquirer
+    .prompt ([
 
     {
         type: "input",
@@ -40,20 +29,20 @@ const questions = [
         message: "Please choose a color for your shape,(enter either a color keyword or a hexadecimal nunber",
         name: "shape-color",
     },
-]
-function writeToFile (fileName,data){
-    const content = generateLogo(data);
-    fs.writeFile(fileName,content,function (error) {
-        if (error){
-            return console.log(error);
-        }
-        console.log('Generated logo.svg');
-    });
-    function init(){
-        inquirer.createPromptModule(questions).then(function(data){
-            const fileName = "logo.svg";
-            writeToFile(fileName,data);
-        });
-        init();
-    }
+])
+
+class svg{
+    constructor(){
+    this.textElement = ""
+    this.shapeElement = ""
 }
+render() {
+    return `<svg version = "1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200"`
+}
+setTextElement (text, color) {
+    this.textElement =`<text x="150" y="125" font-size="60" text-anchor="middle" fill="100%"`
+}
+setShapeElement (shape){
+    this.shapeElement = shape.render()
+}
+};
