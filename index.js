@@ -1,12 +1,10 @@
 const fs = require("fs");
-
 const inquirer = require("inquirer");
+const {Shapes, Circle, Triangle, Square} = require("./lib/shapes");
 
-const {Circle, Triangle, Square} = require("./lib/shapes");
 
-
-    inquirer
-    .prompt ([
+const questions = [
+    
 
     {
         type: "input",
@@ -21,28 +19,50 @@ const {Circle, Triangle, Square} = require("./lib/shapes");
     {
         type: "list",
         message: "Please choose a shape from the list",
-        choices: [Circle, Triangle, Square],
+        choices: [ 'Circle', 'Triangle', 'Square' ],
         name: "shape",
     },
     {
         type: "input",
-        message: "Please choose a color for your shape,(enter either a color keyword or a hexadecimal nunber",
+        message: "Please choose a color for your shape,(enter either a color keyword or a hexadecimal number",
         name: "shape-color",
     },
-])
+];
+inquirer.prompt(questions).then((answers)=> {
+    const {shape, shapeColor, text, textColor} = answers;
+    const logoObj = new Shapes ();
+    let svgElement = "";
 
-class svg{
-    constructor(){
-    this.textElement = ""
-    this.shapeElement = ""
-}
-render() {
-    return `<svg version = "1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200"`
-}
-setTextElement (text, color) {
-    this.textElement =`<text x="150" y="125" font-size="60" text-anchor="middle" fill="100%"`
-}
-setShapeElement (shape){
-    this.shapeElement = shape.render()
-}
-};
+    logoObj.setShapeColor(shapeColor);
+
+    switch(shape){
+
+        case "Circle":
+            const circle = new Circle();
+            logoObj.setShapeColor(shapeColor);
+            svgElement = circle.render();
+            break;
+        case "Triangle":
+            const triangle = new Triangle ();
+            logoObj.setShapeColor(shapeColor);
+            svgElement = triangle.render ();
+            break;
+        case "Square":
+            const square = new Square ();
+            logoObj.setShapeColor(shapeColor);
+            svgElemenet = square.render ();        
+    }
+    let x = 150, y = 120;
+    if (shape === "Triangle"){
+        y = 135;
+    } else if (shape === "Square"){
+        y = 145;
+    }
+    const finalSvg =`<svg mlns = "http://www.w3.org/2000/svg" width = "300" height = "200">
+    ${svgElement}<text x = "${x}" y = "${y}" fill = "${textColor}"
+    font-size = "50" text-anchor = "middle">${text}</text></svg>`;
+
+    fs.writeFileSync("logo.svg", finalSvg);
+
+    console.log('Generated logo.svg');
+});
