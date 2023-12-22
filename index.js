@@ -1,10 +1,11 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
 const {Shapes, Circle, Triangle, Square} = require("./lib/shapes");
+const { log } = require("console");
 
 
 const questions = [
-    
+   //inquirer prompts 
 
     {
         type: "input",
@@ -14,7 +15,7 @@ const questions = [
     {
         type: "input",
         message: "Please choose your text color,(enter either a color keyword or hexadecimal number",
-        name: "text-color",
+        name: "textColor",
     },
     {
         type: "list",
@@ -25,38 +26,40 @@ const questions = [
     {
         type: "input",
         message: "Please choose a color for your shape,(enter either a color keyword or a hexadecimal number",
-        name: "shape-color",
+        name: "shapeColor",
     },
 ];
 inquirer.prompt(questions).then((answers)=> {
     const {shape, shapeColor, text, textColor} = answers;
-    const logoObj = new Shapes ();
-    let svgElement = "";
+    console.log(answers);
+    let svgElement;
+    let logoObj;
 
-    logoObj.setShapeColor(shapeColor);
 
     switch(shape){
-
         case "Circle":
-            const circle = new Circle();
-            logoObj.setShapeColor(shapeColor);
-            svgElement = circle.render();
+            // Creating Circle SVG
+            logoObj = new Circle();
             break;
         case "Triangle":
-            const triangle = new Triangle ();
-            logoObj.setShapeColor(shapeColor);
-            svgElement = triangle.render ();
+            // Creating Triangle SVG
+            logoObj = new Triangle();
             break;
+            // Creating Square SVG
         case "Square":
-            const square = new Square ();
-            logoObj.setShapeColor(shapeColor);
-            svgElemenet = square.render ();        
+            logoObj = new Square();      
     }
-    let x = 150, y = 120;
+    //setting shapeColor, Text and TextColor on logoObj variable
+    logoObj.setShapeColor(shapeColor);
+    logoObj.setText(text);
+    logoObj.setTextColor(textColor);
+    svgElement = logoObj.render();
+    // aligning svg shapes and text on x and y axis
+    let x = 60, y = 90;
     if (shape === "Triangle"){
-        y = 135;
+        x = 75;
     } else if (shape === "Square"){
-        y = 145;
+        y = 80;
     }
     const finalSvg =`<svg mlns = "http://www.w3.org/2000/svg" width = "300" height = "200">
     ${svgElement}<text x = "${x}" y = "${y}" fill = "${textColor}"
@@ -64,5 +67,7 @@ inquirer.prompt(questions).then((answers)=> {
 
     fs.writeFileSync("logo.svg", finalSvg);
 
+    console.log(logoObj);
+    console.log(svgElement);
     console.log('Generated logo.svg');
 });
